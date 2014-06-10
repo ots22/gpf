@@ -1,0 +1,16 @@
+&DIMENSIONS
+	input_dimension = 1,
+	n = 20,
+	nsparse = 16
+/
+
+&HYPERPARAMETERS
+	noise = 1.e-5,
+	theta = 1.30
+/
+
+&CONTROL
+	optimize = .true.
+	optimize_max_iter = 100
+	optimize_ftol = 1.0d-2
+/
