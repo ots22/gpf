@@ -19,7 +19,7 @@ contains
     type(c_ptr), intent(in) :: handle
     integer(c_int), intent(in), value :: input_len
     real(c_double), intent(in) :: input(input_len)
-    integer(c_int), intent(in) :: input_type
+    integer(c_int), intent(in), value :: input_type
     type(SparseGP), pointer :: gp
     call c_f_pointer(handle, gp)
     output = SparseGP_predict(gp, input, input_type)   
