@@ -1,5 +1,5 @@
-module cov_sqexp
-use util
+module m_cov_sqexp
+use m_util
 implicit none
 contains
   pure function cov_val(x,y,r)
@@ -45,4 +45,4 @@ contains
     end if
   end function cov
 
-end module cov_sqexp
+end module m_cov_sqexp

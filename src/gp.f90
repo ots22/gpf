@@ -1,10 +1,10 @@
 module m_GP
-  use util
-  use cov_sqexp
+  use m_util
+  use m_cov_sqexp
   implicit none
   
   ! Projected process approximation to full GP
-  type SparseGP
+  type :: SparseGP
      ! number of sparse points
      integer :: m
      ! noise hyperparameter (sigma^2)

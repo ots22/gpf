@@ -1,4 +1,4 @@
-module gp_optim
+module m_gp_optim
   use m_gp
   implicit none
   include 'nlopt.f'
@@ -37,4 +37,4 @@ contains
     end if   
   end subroutine check_error_code
 
-end module gp_optim
+end module m_gp_optim

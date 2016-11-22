@@ -1,9 +1,9 @@
 ! train (and optionally optimize) a sparse GP from data files
 
 program gp_in
-  use util
+  use m_util
   use m_gp
-  use gp_optim
+  use m_gp_optim
   
   implicit none
 

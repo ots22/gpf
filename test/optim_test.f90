@@ -1,6 +1,6 @@
 program optim_test
-  use gp_optim
-  use gp_example
+  use m_gp_optim
+  use m_gp_example
 
   implicit none
 

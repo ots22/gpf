@@ -1,5 +1,5 @@
 program cov_test
-  use cov_sqexp
+  use m_cov_sqexp
 
   implicit none
 

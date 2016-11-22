@@ -1,5 +1,5 @@
 program inv_test
-  use util
+  use m_util
   integer, dimension(3) :: piv
   real(dp), dimension(3,3) :: A, invA
   real(dp), dimension(1) :: lwork_real

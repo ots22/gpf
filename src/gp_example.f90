@@ -1,6 +1,6 @@
 ! contains a simple example of a gp to use in tests
 
-module gp_example
+module m_gp_example
   use m_gp
   implicit none
   
@@ -43,4 +43,4 @@ contains
     gp = SparseGP(N-2, 1.d-4, (/ 1.4_dp /), x(1:N,:), obs_type(1:N), t(1:N))
 
   end subroutine gp_example_initialise
-end module gp_example
+end module m_gp_example

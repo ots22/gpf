@@ -1,6 +1,6 @@
 program gp_test2
   use m_gp
-  use gp_example
+  use m_gp_example
 
   implicit none
 

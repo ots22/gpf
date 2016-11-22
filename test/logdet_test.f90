@@ -1,5 +1,5 @@
 program log_det_test
-  use util
+  use m_util
   implicit none
   
   real(dp), dimension(3,3) :: A

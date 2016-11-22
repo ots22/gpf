@@ -1,4 +1,4 @@
-module util
+module m_util
   implicit none
   integer, parameter ::  dp = selected_real_kind(14,100)
 
@@ -46,4 +46,4 @@ contains
 
   end function logdet
   
-end module util
+end module m_util
