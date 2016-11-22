@@ -1,7 +1,6 @@
 .SUFFIXES: 
 
 vpath %.f90 src test
-FC = gfortran-4.8
 MODDIR = obj
 F90FLAGS = -std=f2008 -Wall -Wextra -O3 -I /home/raid/ots22/include -I $(MODDIR) -J $(MODDIR)
 F90LINKFLAGS = -lblas -llapack -lnlopt -L /home/raid/ots22/lib
@@ -43,7 +42,7 @@ depend:
 
 obj/%.o : %.f90
 	mkdir -p obj
-	$(FC) $(F90FLAGS) $^ -c -o $@
+	$(FC) $(F90FLAGS) $(filter %.f90 %.F90, $^) -c -o $@
 
 obj/%.mod:
 	mkdir -p obj

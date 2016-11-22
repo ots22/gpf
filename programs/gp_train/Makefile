@@ -1,5 +1,3 @@
-FC = gfortran-4.8
-
 # should contain paths to NLOPT and GPF
 MOD = ../../obj   /home/raid/ots22/include
 LIB = ../../lib   /home/raid/ots22/lib
