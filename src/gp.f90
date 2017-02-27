@@ -137,30 +137,29 @@ contains
 
   end subroutine write_SparseGP
   
-  function read_SparseGP(filename)
+  function read_SparseGP(filename) result(gp)
     character(len=*), intent(in) :: filename
-    type(SparseGP) :: read_SparseGP
+    type(SparseGP) :: gp
     integer n, ntheta, d, u
     open(newunit=u, file=filename)
-    read (u,'(I10)') n, read_SparseGP%m, ntheta, d
+    read (u,'(I10)') n, gp%m, ntheta, d
 
     ! check inputs read are sane
 
-    call alloc_SparseGP(read_SparseGP, n, read_SparseGP%m, ntheta, d)
+    call alloc_SparseGP(gp, n, gp%m, ntheta, d)
     
-    read (u,'(es24.15)') read_SparseGP%nu, read_SparseGP%theta, & 
-         read_SparseGP%x
-    read (u,'(I4)') read_SparseGP%obs_type
-
-    read (u,'(es24.15)') read_SparseGP%Kmn_t, read_SparseGP%invQKmn_t, &
-         read_SparseGP%Q, read_SparseGP%invQ
+    read (u,'(es24.15)') gp%nu, gp%theta, & 
+         gp%x
+    read (u,'(I4)') gp%obs_type
+    read (u,'(es24.15)') gp%Kmn_t, gp%invQKmn_t, &
+         gp%Q, gp%invQ
     close(u)
   end function read_SparseGP
 
-  function SparseGP_predict(gp, xnew, obs_type_new_arg)
+  pure function SparseGP_predict(gp, xnew, obs_type_new_arg)
     real(dp) :: SparseGP_predict
-    type(SparseGP) :: gp
-    real(dp), dimension(:) :: xnew
+    type(SparseGP), intent(in) :: gp
+    real(dp), dimension(:), intent(in) :: xnew
     integer, optional, intent(in) :: obs_type_new_arg
     
     integer :: obs_type_new, i
