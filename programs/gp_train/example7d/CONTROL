@@ -1,0 +1,20 @@
+&DIMENSIONS
+	input_dimension = 7,
+	n = 200
+/
+
+&MODEL
+	covariance_function = 'SQEXP4PARAM'
+	noise_model_name = 'VAL'
+/
+
+&HYPERPARAMETERS
+	nu = 1e-9
+	theta = 1.0, 0.5, 0.4, 0.01
+/
+
+&CONTROL
+	optimize = .true.
+	optimize_max_iter = 1000
+	optimize_ftol = 1.0d-4
+/

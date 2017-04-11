@@ -1,7 +1,7 @@
 &DIMENSIONS
-	input_dimension = 1,
-	n = 20
-!	nsparse = 16
+	input_dimension = 2,
+	n = 100
+!	nsparse = 90
 /
 
 &MODEL
@@ -10,12 +10,12 @@
 /
 
 &HYPERPARAMETERS
-	nu = 1.e-5,
-	theta = 1.30
+	nu = 1.e-6,
+	theta = 0.5, 0.5
 /
 
 &CONTROL
 	optimize = .true.
-	optimize_max_iter = 100
-	optimize_ftol = 1.0d-2
+	optimize_max_iter = 1000
+	optimize_ftol = 1.0d-4
 /

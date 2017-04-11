@@ -3,21 +3,27 @@
 program gp_in
   use m_util
   use m_gp
+  use m_gp_sparse
+  use m_gp_dense
   use m_gp_optim
-  
+  use m_cov_all
+  use m_noise_all
+
   implicit none
 
-  type(SparseGP) :: gp
+!  type(SparseGP) :: gp
+  class(BaseGP), allocatable :: gp
   
-  real(dp) :: noise, a(1)
   ! number of training points, sparse points and dimension of the input
   integer :: n, nsparse, input_dimension
   ! unit number
   integer :: u
   ! loop counter
   integer :: i
+  ! number of hyperparameters and noise parameters required
+  integer :: ntheta, nnu
 
-  real(dp), dimension(:), allocatable :: theta, t, lbounds, ubounds
+  real(dp), dimension(:), allocatable :: theta, nu, t, lbounds, ubounds
   real(dp), dimension(:,:), allocatable :: x
   integer, dimension(:), allocatable :: obs_type
   logical :: optimize
@@ -25,8 +31,15 @@ program gp_in
   integer :: optimize_max_iter
   real(dp) :: optimize_ftol
 
-  namelist/DIMENSIONS/input_dimension,n,nsparse
-  namelist/HYPERPARAMETERS/noise, theta, lbounds, ubounds
+  character(len=max_name_len) :: covariance_function
+  character(len=max_name_len) :: noise_model_name
+
+  class(cov_fn), allocatable :: cf
+  class(noise_model), allocatable :: nm
+
+  namelist/DIMENSIONS/input_dimension, n, nsparse
+  namelist/MODEL/covariance_function, noise_model_name
+  namelist/HYPERPARAMETERS/nu, theta, lbounds, ubounds
   namelist/CONTROL/optimize, optimize_max_iter, optimize_ftol
   
   input_dimension = -1
@@ -35,34 +48,37 @@ program gp_in
  
   read(*, nml=DIMENSIONS)
   
-  if (input_dimension.le.0.or.n.le.0.or.nsparse.le.0) then
+  if (input_dimension.le.0.or.n.le.0.or.nsparse.lt.-1) then
      write (*,*) "Invalid DIMENSIONS input block"
      stop 1
   end if
-
   if (nsparse.gt.n) then
      write (*,*) "More sparse points requested than total inputs (DIMENSIONS block)"
      stop 1
   end if
 
-  allocate(real(dp) :: theta(input_dimension))
-  allocate(real(dp) :: lbounds(input_dimension+1))
-  allocate(real(dp) :: ubounds(input_dimension+1))
+  read(*, nml=MODEL)
+
+  call string_to_cov_fn(covariance_function, cf)
+  call string_to_noise_model(noise_model_name, nm)
+
+  nnu = nm%nparams_required(input_dimension)
+  ntheta = cf%ntheta_required(input_dimension)
+
+  allocate(real(dp) :: nu(nnu))
+  allocate(real(dp) :: theta(ntheta))
+  allocate(real(dp) :: lbounds(nnu + ntheta))
+  allocate(real(dp) :: ubounds(nnu + ntheta))
   allocate(real(dp) :: t(n))
   allocate(real(dp) :: x(n,input_dimension))
   allocate(integer :: obs_type(n))
  
-  noise = -1
+  nu = -1
   theta = -1
   lbounds(1) = 0.0
   lbounds(2:) = 0.01
   ubounds(:) = 100.0
   read(*, nml=HYPERPARAMETERS)
-
-  if (noise.le.0.or.any(theta.le.0)) then
-     write (*,*) "Invalid HYPERPARAMETERS input block"
-     stop 1
-  end if
 
   optimize = .false.
   optimize_max_iter = 100
@@ -73,12 +89,16 @@ program gp_in
   
   read (u,*) (x(i,:), obs_type(i), t(i), i=1,n)
 
-  gp = SparseGP(nsparse, noise, theta, x, obs_type, t)
-
-  if (optimize) then
-     call log_lik_optim(input_dimension+1, gp, lbounds, ubounds, optimize_max_iter, optimize_ftol)
+  if (nsparse.ge.n.or.nsparse.eq.-1) then
+     allocate(gp, source=DenseGP(nu, theta, x, obs_type, t, cf, nm))
+  else
+     allocate(gp, source=SparseGP(nsparse, nu, theta, x, obs_type, t, cf, nm))
   end if
 
-  call write_SparseGP("out.gp", gp) 
-  
+  if (optimize) then
+     call log_lik_optim(nnu + ntheta, gp, lbounds, ubounds, optimize_max_iter, optimize_ftol)
+  end if
+
+  call gp%write_out("out.gp")
+
 end program gp_in
