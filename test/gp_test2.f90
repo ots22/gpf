@@ -5,11 +5,17 @@ program gp_test2
   implicit none
 
   type(SparseGP) :: gp2
+  type(DenseGP) :: gpDense2
 
   call gp_example_initialise
 
-  call write_SparseGP('square.gp',gp)
+  call gp%write_out('square.gp')
+
   gp2 = read_SparseGP('square.gp')
-  call write_SparseGP('square2.gp',gp2)
+  call gp2%write_out('square2.gp')
+
+  call gpDense%write_out('square.gpd')
+  gpDense2 = read_DenseGP('square.gpd')
+  call gpDense2%write_out('square2.gpd')
 
 end program gp_test2

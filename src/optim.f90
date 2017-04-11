@@ -1,19 +1,23 @@
 module m_gp_optim
   use m_gp
+  use m_util, only: dp
   implicit none
   include 'nlopt.f'
 
 contains
   subroutine log_lik_optim(ntheta, gp, lbounds, ubounds, iterations, ftol_rel)
-    type(SparseGP) :: gp
+    class(BaseGP) :: gp
     integer(kind=8) :: opt
     integer :: ntheta, iterations, ires
     real(dp) :: ftol_rel, maxf
     real(dp), dimension(ntheta) :: lbounds, ubounds
     real(dp), dimension(ntheta) :: hypers
+    integer nnu
+    
+    nnu = size(gp%nu)
 
-    hypers(1) = gp%nu
-    hypers(2:) = gp%theta
+    hypers(1:nnu) = gp%nu
+    hypers(nnu+1:ntheta) = gp%theta
 
     call nlo_create(opt, NLOPT_LN_BOBYQA, size(lbounds))
     call nlo_set_lower_bounds(ires, opt, lbounds)
@@ -31,7 +35,7 @@ contains
 
   subroutine check_error_code(ires)
     integer ires
-    if (ires.le.0) then
+    if (ires.eq.-1.or.ires.eq.-2.or.ires.eq.-3) then
        print *, "NLopt failed with error code ", ires
        stop 1
     end if   

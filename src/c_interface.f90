@@ -1,5 +1,6 @@
 module c_interface
   use m_gp
+  use m_gp_sparse 
   use iso_c_binding
   implicit none
 
@@ -11,7 +12,7 @@ module c_interface
   ! An approach based on passing around C pointers to the SparseGP
   ! object returned by C_LOC does not work, since SparseGP is not a
   ! c-interoperable type as defined by the standard (and does not
-  ! compile with gfortran-6 (despite it working with earlier versions
+  ! compile with gfortran-6, despite it working with earlier versions
   ! of the compiler).  Instead, keep a simple pool of pointers, to
   ! which the `gpf_handle' type is an index.  This is rather
   ! simplistic, and only allows for MAX_GP_HANDLE GPs to be used over
@@ -47,7 +48,7 @@ contains
     integer(c_int), intent(in), value :: input_len
     real(c_double), intent(in) :: input(input_len)
     integer(c_int), intent(in), value :: input_type
-    output = SparseGP_predict(gp(handle)%ptr, input, input_type)
+    output = gp(handle)%ptr%predict(input, input_type)
   end function gp_projected_process_predict
 
   subroutine gp_projected_process_destroy(handle) bind(c)

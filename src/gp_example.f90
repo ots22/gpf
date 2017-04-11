@@ -2,20 +2,28 @@
 
 module m_gp_example
   use m_gp
+  use m_gp_sparse
+  use m_gp_dense
+  use m_util
+  use m_cov_sqexp
+  use m_noise_value_only
   implicit none
   
   type(SparseGP) :: gp
+  type(DenseGP) :: gpdense
   integer, parameter :: N = 50
   real(dp) :: x(2*N,1), t(2*N)
   integer :: obs_type(2*N)
 
-  public :: gp, N, x, t, obs_type
+  public :: gp, gpDense, N, x, t, obs_type
 
 contains
 
   subroutine gp_example_initialise   
     integer :: i, j, u
     real(dp) :: a
+    type(cov_sqexp) :: cf
+    type(noise_value_only) :: nm
 
     ! shuffled input vector
     do i=1,N
@@ -40,7 +48,9 @@ contains
     write (u,'(2F20.10)') (x(i,1), t(i), i=1,N)
     close(u)
 
-    gp = SparseGP(N-2, 1.d-4, (/ 1.4_dp /), x(1:N,:), obs_type(1:N), t(1:N))
+    gp = SparseGP(N-2, (/ 1.d-4 /), (/ 1.4_dp /), x(1:N,:), obs_type(1:N), t(1:N), cf, nm)
+
+    gpDense = DenseGP( (/ 1.d-9 /), (/ 1.4_dp /), x(1:N,:), obs_type(1:N), t(1:N), cf, nm)
 
   end subroutine gp_example_initialise
 end module m_gp_example

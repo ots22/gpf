@@ -15,7 +15,7 @@ program GP_test
   call cpu_time(startt)
   do i=0,Nout
      a = 5.0_dp*i/Nout
-     write (u,*) a, SparseGP_predict(gp, (/ a /), 0)
+     write (u,*) a, gp%predict([a], 0)
      !tmp = SparseGP_predict(gp, (/ a /), 1)
   end do
   call cpu_time(finisht)

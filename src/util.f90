@@ -2,6 +2,8 @@ module m_util
   implicit none
   integer, parameter ::  dp = selected_real_kind(14,100)
 
+  integer, parameter :: max_name_len=100
+
 contains
   ! in place inverse
   subroutine ninv(A)
