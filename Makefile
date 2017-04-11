@@ -2,7 +2,7 @@
 
 vpath %.f90 src test
 MODDIR = obj
-F90FLAGS = -std=f2008 -Wall -Wextra -O3 -I /home/raid/ots22/include -I $(MODDIR) -J $(MODDIR)
+F90FLAGS = -std=f2008 -frealloc-lhs -Wall -Wextra -Wno-compare-reals -Wno-unused-dummy-argument -O3 -I /home/raid/ots22/include -I $(MODDIR) -J $(MODDIR)
 F90LINKFLAGS = -lblas -llapack -lnlopt -L /home/raid/ots22/lib
 
 TESTEXE = cov_test gp_test gp_test2 inv_test logdet_test optim_test
@@ -49,6 +49,11 @@ obj/%.mod:
 	$(FC) $(F90FLAGS) -fsyntax-only $(filter %.f90, $^)
 
 test: $(TESTOUTPUT)
+
+bin/test/gp_test2.sh.completed : bin/test/gp_test2
+
+# convenient to allow tests to be re-run
+.PHONY : $(TESTOUTPUT)
 
 $(TESTOUTPUT) : %.completed : %
 	cd bin/test; ../../$< && touch ../../$@
