@@ -63,8 +63,8 @@ the process.
 an observation of the value of the underlying function.  If `obs_type(j)` is _i_ with _i > 1_, 
 then `t(j)` represents an observation of the partial derivative of the underlying function with 
 respect to the _i_ th component of _x_.
-* `CovFunction`: the covariance function to use (of class `cov_fn`, see below)
-* `NoiseModel`: the noise model to use (of class `noise_model`, see below)
+* `CovFunction`: the covariance function to use (of class `cov_fn`, see [below](covariance-functions))
+* `NoiseModel`: the noise model to use (of class `noise_model`, see [below](noise-models))
 
 A `SparseGP` object can be constructed similarly,
 
