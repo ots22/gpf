@@ -34,11 +34,13 @@ directories for further details.
 * gp_predict: read in a GP file and produce outputs for points read from standard input
 
 ### Linking with the library
+
 Ensure that the module files `gp.mod`, `gp_dense.mod` and `gp_sparse.mod` are in the
 include path of your compiler.  Link with the static library `libgpf.a` by providing 
 the `-lgpf` flag (gfortran).
 
 ### Constructing a Gaussian process object from data
+
 Include the module with either `use m_gp_dense` or `use m_gp_sparse`. These modules provide 
 the types `gp_dense` (full Gaussian process) and `gp_sparse` (Gaussian process from the 
 projected process approximation).  Both are subtypes of the class `gp_base`.
@@ -51,14 +53,17 @@ type(noise_value_only) :: nm
 my_gp = DenseGP(nu=[1.d-9], theta=[1.4_dp], x=x(1:N,:), obs_type=obs_type(1:N), 
                 t=t(1:N), CovFunction=cf, NoiseModel=nm)
 ```
-where `nu`, `theta`, `x`, and `t` are double precision arrays, and `obs_type` is an integer array.
-* `nu`: an array of the noise hyperparameters
+where `nu`, `theta`, `x`, and `t` are double precision arrays, and `obs_type` is an integer 
+array.
+* `nu`: the noise hyperparameters
 * `theta`: the covariance hyperparameters
-* `x`: the input data
+* `x`: the coordinates of the input data
 * `obs_type`: the _types_ of the observations. If `obs_type(j)` is 0, then `t(j)` represents
-an observation of the value of the underlying function.  If `obs_type(j)` is _i_ with _i > 1_, then `t(j)`
-represents an observation of the partial derivative of the underlying function with respect to the
-_i_ th component of _x_.
+an observation of the value of the underlying function.  If `obs_type(j)` is _i_ with _i > 1_, 
+then `t(j)` represents an observation of the partial derivative of the underlying function with 
+respect to the _i_ th component of _x_.
+* `CovFunction`: the covariance function to use (of class `cov_fn`, see below)
+* `NoiseModel`: the noise model to use (of class `noise_model`, see below)
 
 ### Reading a Gaussian process object from a file
 
@@ -107,6 +112,11 @@ A value _i_ with _i > 1_, gives the predicted partial derivative of _y_ with res
 
 ### C bindings
 
+
+## References
+
+C. Rasmussen and C. Williams. Gaussian Processes for Machine Learning. Adaptative
+Computation and Machine Learning Series. MIT Press, 2006. ISBN 9780262182539.
 
 
 
