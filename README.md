@@ -2,7 +2,7 @@
 
 GPF is a small Fortran library for Gaussian process regression.  It currently
 implements value predictions with dense Gaussian processes, and projected-process
-approximate Gaussian processes (described by [Rasmussen and Williams, 2006, chapter 8](www.gaussianprocess.org/gpml/chapters/RW8.pdf)).
+approximate Gaussian processes (described by [Rasmussen and Williams, 2006, chapter 8](http://www.gaussianprocess.org/gpml/chapters/RW8.pdf)).
 
 ## Installation (Linux)
 
