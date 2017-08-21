@@ -60,20 +60,19 @@ the process.
 * `theta`: the covariance hyperparameters
 * `x`: the coordinates of the input data
 * `obs_type`: the _types_ of the observations. If `obs_type(j)` is 0, then `t(j)` represents
-an observation of the value of the underlying function.  If `obs_type(j)` is _i_ with _i > 1_, 
+an observation of the value of the underlying function.  If `obs_type(j)` is _i_ with _i > 0_, 
 then `t(j)` represents an observation of the partial derivative of the underlying function with 
 respect to the _i_ th component of _x_.
 * `CovFunction`: the covariance function to use (of class `cov_fn`, see [below](#covariance-functions))
 * `NoiseModel`: the noise model to use (of class `noise_model`, see [below](#noise-models))
 
-A `SparseGP` object can be constructed similarly,
-
+A `SparseGP` object can be constructed similarly:
 ```f90
 type(SparseGP) my_gp
 my_gp = SparseGP(nsparse, nu, theta, x, obs_type, t, cf, nm)
 ```
-* `nsparse`: an integer representing the number of privileged points to use in the projected process.
-This should be strictly less than the number of elements in the training data set.
+* `nsparse`: an integer representing the number of privileged points to use in the projected 
+process. This should be strictly less than the number of elements in the training data set.
 * The remaining parameters are the same as `DenseGP`.
 
 ### Reading a Gaussian process object from a file
@@ -97,30 +96,40 @@ my_gp%write_out('out.gp')
 
 ```f90
 use gp_optim
+class(BaseGP) my_gp
 ...
 log_lik_optim(my_gp, lbounds, ubounds, optimize_max_iter, optimize_ftol)
 ```
-#### Parameters:
 * `my_gp`: an object of class BaseGP (either SparseGP or DenseGP)
-* `lbounds` and `ubounds`: real arrays of length equal to the number of noise hyperparemeters
-plus the number of covariance hyperparameters, representing lower and upper bounds of
-the hyperparameters in the optimization.
-* `optimize_max_iter`: maximum number of iterations before stopping.
-* `optimize_ftol`: stop the optimization when an optimization step changes the log likelihood by less than this amount.
+* `lbounds` and `ubounds`: double precision arrays of length equal to the number of noise 
+hyperparemeters plus the number of covariance hyperparameters, representing lower and upper 
+bounds of the hyperparameters in the optimization.
+* `optimize_max_iter`: the maximum number of iterations to perform in the optimization before 
+stopping.
+* `optimize_ftol`: a double precision value stop the optimization when an optimization step 
+changes the log likelihood by less than this amount.
 
 ### Making predictions
 
-A prediction from the process at a coordinate `x` can be obtained as
+A prediction of the underlying function at a coordinate `x` can be obtained as
 ```f90
 y = my_gp%predict(x, obs_type)
 ```
-* `x`: a real array of the dimension of the process
-* `obs_type`: an integer representing the type of the observation. A value of `0` gives a prediction of the value.
-A value _i_ with _i > 1_, gives the predicted partial derivative of _y_ with respect to the _i_ th component of _x_.
+* `x`: a double precision array with length of the dimension of the process
+* `obs_type`: an integer representing the type of the observation. A value of `0` gives a 
+prediction of the value.  A value _i_ with _i > 1_, gives the predicted partial derivative of _y_
+with respect to the _i_ th component of _x_.
 
 ### Covariance functions
 
+Covariance functions extend the abstract type `cov_fn` (see [src/cov.f90]).
+
+A square-exponential covariance function is defined as `cov_sqexp` ([src/cov_sqexp.f90]), and 
+others can be defined similarly.
+
 ### Noise models
+
+Noise models extend the abstract type `noise_model`.
 
 ### C bindings
 
