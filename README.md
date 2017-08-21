@@ -42,19 +42,20 @@ the `-lgpf` flag (gfortran).
 ### Constructing a Gaussian process object from data
 
 Include the module with either `use m_gp_dense` or `use m_gp_sparse`. These modules provide 
-the types `gp_dense` (full Gaussian process) and `gp_sparse` (Gaussian process from the 
-projected process approximation).  Both are subtypes of the class `gp_base`.
+the types `DenseGP` (full Gaussian process) and `SparseGP` (Gaussian process from the 
+projected process approximation).  Both are subtypes of the class `BaseGP`.
 
-A `gp_dense` object can be constructed as follows:
+A `DenseGP` object can be constructed as follows:
 ```f90
-type(gp_dense) :: my_gp
-type(cov_sqexp) :: cf
-type(noise_value_only) :: nm
+type(DenseGP) my_gp
+type(cov_sqexp) cf
+type(noise_value_only) nm
 my_gp = DenseGP(nu=[1.d-9], theta=[1.4_dp], x=x(1:N,:), obs_type=obs_type(1:N), 
                 t=t(1:N), CovFunction=cf, NoiseModel=nm)
 ```
-where `nu`, `theta`, `x`, and `t` are double precision arrays, and `obs_type` is an integer 
-array.
+where `nu`, `theta`, `x` and `t` are double precision arrays, and `obs_type` is an integer 
+array; `x` has rank two, the first dimension , and the second dimension defining the dimension of
+the process.
 * `nu`: the noise hyperparameters
 * `theta`: the covariance hyperparameters
 * `x`: the coordinates of the input data
@@ -64,6 +65,16 @@ then `t(j)` represents an observation of the partial derivative of the underlyin
 respect to the _i_ th component of _x_.
 * `CovFunction`: the covariance function to use (of class `cov_fn`, see below)
 * `NoiseModel`: the noise model to use (of class `noise_model`, see below)
+
+A `SparseGP` object can be constructed similarly,
+
+```f90
+type(SparseGP) my_gp
+my_gp = SparseGP(nsparse, nu, theta, x, obs_type, t, cf, nm)
+```
+* `nsparse`: an integer representing the number of privileged points to use in the projected process.
+This should be strictly less than the number of elements in the training data set.
+* The remaining parameters are the same as `DenseGP`.
 
 ### Reading a Gaussian process object from a file
 
@@ -75,9 +86,10 @@ or
 SparseGP('in.gp')
 ```
 
-### Writing a `gp` object to a file
+### Writing a Gaussian process object to a file
 
 ```f90
+class(BaseGP) my_gp
 my_gp%write_out('out.gp')
 ```
 
