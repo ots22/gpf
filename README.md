@@ -2,7 +2,7 @@
 
 GPF is a small Fortran library for Gaussian process regression.  It currently
 implements value predictions with dense Gaussian processes, and projected-process
-approximate Gaussian processes (described here).
+approximate Gaussian processes (described by [Rasmussen and Williams, 2006, chapter 8](www.gaussianprocess.org/gpml/chapters/RW8.pdf)).
 
 ## Installation (Linux)
 
@@ -34,12 +34,12 @@ directories for further details.
 * gp_predict: read in a GP file and produce outputs for points read from standard input
 
 ### Linking with the library
-Ensure that the module files `gp.mod`, `gp_dense.mod` and/or `gp_sparse.mod` are in the
+Ensure that the module files `gp.mod`, `gp_dense.mod` and `gp_sparse.mod` are in the
 include path of your compiler.  Link with the static library `libgpf.a` by providing 
 the `-lgpf` flag (gfortran).
 
-### Constructing a `gp` object from data
-Include the module with either `use gp_dense` or `use gp_sparse`.  A `gp` object can be constructed
+### Constructing a Gaussian process object from data
+Include the module with either `use m_gp_dense` or `use m_gp_sparse`. These modules provide the types `gp_dense` (full Gaussian process) and `gp_sparse` (approximate Gaussian process using  A `gp` object can be constructed
 as follows:
 ```f90
 type(gp_dense) :: my_gp
