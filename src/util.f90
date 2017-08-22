@@ -5,6 +5,37 @@ module m_util
   integer, parameter :: max_name_len=100
 
 contains
+  ! Solve a system of linear equations A*x = b for a matrix A and
+  ! vectors x and b.  Implemented as a wrapper around LAPACK dgesv.
+  function solve(M,b) result(x)
+    real(dp), intent(in) :: M(:,:)
+    real(dp) :: b(:)
+    real(dp), dimension(size(M,1),size(M,2)) :: A
+    real(dp), dimension(size(b,1)) :: x
+    integer ipiv(size(b,1)), N, info
+
+    ! check M is square and b conforms
+    if (size(M,1) /= size(M,2)) then
+       write (0,*) "solve: Array M passed to solve should be square.  Got ", &
+            size(M,1), "x", size(M,2)
+       error stop
+    end if
+
+    N = size(M, 1)
+
+    ! A and x are overwritten on output of dgesv, so copy
+    A = M
+    x = b
+    call dgesv(N, 1, A, N, ipiv, x, N, info)
+
+    ! check for success
+    if (info /= 0) then
+       write (0,*) "solve: dgesv returned an error code (", info, ")"
+       error stop
+    end if
+
+  end function solve
+
   ! in place inverse
   subroutine ninv(A)
     real(dp), dimension(:,:), intent(inout) :: A
