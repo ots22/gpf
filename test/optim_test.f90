@@ -10,8 +10,10 @@ program optim_test
 
   call gp_example_initialise
 
-  call log_lik_optim(2, gpDense, [1e-10_DP, 0.1_dp], [10.0_dp, 5.0_dp], &
-       100, 0.0001_dp)
+  call log_lik_optim(ntheta = 3, gp = gpDense, &
+       lbounds = [1e-10_dp, 0.1_dp, 0.1_dp], &
+       ubounds = [10.0_dp, 100.0_dp, 5.0_dp], &
+       iterations = 100, ftol_rel = 0.0001_dp)
 
   do i=1,N
      write (8,*) x(i,1), t(i)

@@ -5,11 +5,12 @@ program cov_test
   implicit none
 
   integer, parameter :: Ndims = 2
-  real(kind=dp), dimension(Ndims) :: x1, y1, r1
+  real(kind=dp), dimension(Ndims) :: x1, y1
+  real(dp) r1(Ndims+1)
 
   x1 = (/ 1.0_dp, 1.0_dp /)
   y1 = (/ 2.0_dp, 1.4_dp /)
-  r1 = (/ 1.0_dp, 0.3_dp /)
+  r1 = (/ 1.0_dp, 1.0_dp, 0.3_dp /)
 
   call cov_test1
   call cov_test2
