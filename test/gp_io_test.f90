@@ -1,4 +1,7 @@
-program gp_test2
+! Check that gp objects can be read in and written back out 
+! without change
+
+program gp_io_test
   use m_gp
   use m_gp_example
 
@@ -18,4 +21,4 @@ program gp_test2
   gpDense2 = read_DenseGP('square.gpd')
   call gpDense2%write_out('square2.gpd')
 
-end program gp_test2
+end program gp_io_test
