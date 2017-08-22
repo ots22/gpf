@@ -110,8 +110,8 @@ contains
     character(len=max_name_len) :: label
     character(len=max_name_len) :: cov_fn_name
     character(len=max_name_len) :: noise_model_name
-    class(cov_fn), allocatable :: cf
-    class(noise_model), allocatable :: nm
+    class(cov_fn), allocatable :: CovFunction
+    class(noise_model), allocatable :: NoiseModel
     open(newunit=u, file=filename)
     read (u,'(A)') label
 
@@ -123,20 +123,20 @@ contains
     read (u,'(I10)') n, ntheta, nnu, d
 
     read (u,'(A)') cov_fn_name 
-    call string_to_cov_fn(cov_fn_name, cf)
-    if (ntheta /= cf%ntheta_required(d)) then
+    call string_to_cov_fn(cov_fn_name, CovFunction)
+    if (ntheta /= CovFunction%ntheta_required(d)) then
        print *, "ntheta does not match number required by the covariance function"
        stop 1
     end if
 
     read (u,'(A)') noise_model_name
-    call string_to_noise_model(noise_model_name, nm)
-    if (nnu /= nm%nparams_required(d)) then
+    call string_to_noise_model(noise_model_name, NoiseModel)
+    if (nnu /= NoiseModel%nparams_required(d)) then
        print *, "size of nu (noise params) does not match number required by the noise model"
        stop 1
     end if
 
-    call alloc_DenseGP(gp, n, ntheta, d, cf, nm)
+    call alloc_DenseGP(gp, n, ntheta, d, CovFunction, NoiseModel)
     
     read (u,'(es24.15)') gp%nu, gp%theta, & 
          gp%x
@@ -189,8 +189,6 @@ contains
     do i=1,size(this%t)
        k(i) = this%covariance%cov(obs_type_new1,this%obs_type(i),xnew,this%x(i,:),this%theta)
     end do
-
-!    print *, obs_type_new1, this%obs_type(10), xnew, this%x(10,:), this%theta, k(10)
 
     predict = dot_product(k, this%invCt)
   end function predict

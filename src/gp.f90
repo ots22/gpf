@@ -7,8 +7,8 @@ module m_gp
   public BaseGP, nlog_lik, set_hyperparams
 
   type, abstract :: BaseGP
-     ! noise hyperparameter (sigma^2)
-     ! meaning depends on noise model 'noise_model'
+     ! The noise hyperparameter(s). This is passed to the noise model
+     ! (`noise_model'), which determines its precise meaning.
      real(dp), dimension(:), allocatable :: nu 
      ! covariance hyperparameters
      ! meaning depends on covariance function `covariance'
