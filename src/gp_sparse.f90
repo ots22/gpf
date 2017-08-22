@@ -93,14 +93,11 @@ contains
     do i=1,m
        this%Q(i,i) = this%Q(i,i) + 1e-9
     end do
-    
-    ! replace the numerical inverses with solves
 
     this%invQ = this%Q
     call ninv(this%invQ)
 
-    this%invQKmn_t = matmul(this%invQ, this%Kmn_t)
-
+    this%invQKmn_t = solve(this%Q, this%Kmn_t)
     this%invKmm = Knm(1:m,:)
     call ninv(this%invKmm)
   end subroutine update_matrices

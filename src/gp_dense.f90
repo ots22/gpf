@@ -166,10 +166,9 @@ contains
        end do
     end do
     
-    ! replace the numerical inverse with a solve
     this%invC = this%C
     call ninv(this%invC)
-    this%invCt = matmul(this%invC, this%t)
+    this%invCt = solve(this%C, this%t)
   end subroutine update_matrices
 
   function predict(this, xnew, obs_type_new)
