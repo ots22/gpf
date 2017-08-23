@@ -9,17 +9,18 @@ program gp_predict
   class(BaseGP), allocatable :: gp
 
   character(len=max_name_len) label
+  character(len=*), parameter :: filename = 'in.gp'
   integer u
 
-  open(newunit=u, file='in.gp')
+  open(newunit=u, file=filename)
   read (u,'(A)') label
   close(u)
   
   select case (label)
   case('SparseGP')
-     allocate(gp, source = SparseGP('in.gp'))
+     allocate(gp, source = SparseGP(filename))
   case('DenseGP')
-     allocate(gp, source = DenseGP('in.gp'))
+     allocate(gp, source = DenseGP(filename))
   case default
      print *, "Incompatible data file (unrecognised GP type '", label, "')"
      stop 1
@@ -34,8 +35,8 @@ contains
     real(dp) ::  x(d)
     integer obs_type
     do
-       read (*,*) obs_type, x(:)
-       write (*,*) obs_type, x(:), gp%predict(x, obs_type)
+       read (*,*) x(:), obs_type
+       write (*,*) x(:), obs_type, gp%predict(x, obs_type)
     end do
   end subroutine loop
 

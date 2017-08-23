@@ -11,7 +11,7 @@
 
 &HYPERPARAMETERS
 	nu = 1.e-5,
-	theta = 1.30
+	theta = 1.0, 1.30
 /
 
 &CONTROL
