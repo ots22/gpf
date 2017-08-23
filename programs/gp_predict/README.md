@@ -15,7 +15,7 @@ where `n` must agree with the dimension of the Gaussian process read
 from the file.
 
 The integer `obs_type` is 0 to obtain a prediction of the underlying
-function value.  A value _i_ with 1 <= _i_ <= _n_ gives the predicted
+function value _y_.  A value _i_ with 1 <= _i_ <= _n_ gives the predicted
 partial derivative of _y_ with respect to `x_i`.
 
 #### Output (STDOUT)
