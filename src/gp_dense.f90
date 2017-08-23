@@ -1,3 +1,12 @@
+! A Gaussian process of full rank.  See [1, section 2], which gives an
+! introduction to Gaussian processes.
+! 
+! [1] J. Quinonero and C. Rasmussen. Analysis of Some Methods for
+! Reduced Rank Gaussian Process Regression, in Switching and Learning
+! in Feedback Systems: European Summer School on Multi-Agent Control,
+! Maynooth, Ireland, September 8-10, 2003, Revised Lectures and
+! Selected Papers, Springer, 2005
+
 module m_gp_dense
   use m_gp
   use m_util
@@ -9,7 +18,8 @@ module m_gp_dense
   public DenseGP, read_DenseGP
 
   type, extends(BaseGP) :: DenseGP
-     ! covariance matrix and inverse
+     ! covariance matrix and inverse (C is represented by Q in the
+     ! notation of ref [1])
      real(dp), dimension(:,:), allocatable :: C, invC
      ! precomuted product, used in the prediction
      real(dp), dimension(:), allocatable :: invCt
@@ -29,6 +39,9 @@ contains
 
   subroutine alloc_DenseGP(gp, n, ntheta, dims, CovFunction, NoiseModel)
     type(DenseGP), intent(inout) :: gp
+    ! n: number of observations
+    ! ntheta: number of covariance hyperparameters
+    ! dims: dimension of the inputs
     integer, intent(in) :: n, ntheta, dims
     class(cov_fn) :: CovFunction
     class(noise_model) :: NoiseModel
@@ -47,10 +60,15 @@ contains
 
   function make_DenseGP(nu, theta, x, obs_type, t, CovFunction, NoiseModel) result(gp)
     type(DenseGP) :: gp
+    ! noise hyperparameters
     real(dp), dimension(:), intent(in) :: nu
+    ! covariance hyperparameters
     real(dp), dimension(:), intent(in) :: theta
+    ! training input coordinates
     real(dp), dimension(:,:), intent(in) :: x
+    ! training input observation types
     integer,  dimension(:), intent(in) :: obs_type
+    ! training outputs
     real(dp), dimension(:), intent(in) :: t
 
     class(cov_fn) :: CovFunction
@@ -85,7 +103,7 @@ contains
     character(len=*), intent(in) :: filename
     character(len=max_name_len) :: cov_fn_name
     character(len=max_name_len) :: noise_model_name
-    integer :: u
+    integer :: u ! unit number for output
 
     cov_fn_name = cov_fn_to_string(this%covariance)
     noise_model_name = noise_model_to_string(this%noise_model)
@@ -161,6 +179,7 @@ contains
           else
              noise = this%noise_model%noise(this%obs_type(i), this%nu) + noise_stab
           end if
+          ! Q in ref [1] (just below eq. (7) therein)
           this%C(i,j) = this%covariance%cov(this%obs_type(i), this%obs_type(j), &
                this%x(i,:), this%x(j,:), this%theta) + noise
        end do
@@ -189,13 +208,15 @@ contains
     do i=1,size(this%t)
        k(i) = this%covariance%cov(obs_type_new1,this%obs_type(i),xnew,this%x(i,:),this%theta)
     end do
-
+    ! Predictive mean from eq. (6) in ref [1]. Here, k corresponds to
+    ! k^{*} in the reference, and t to y
     predict = dot_product(k, this%invCt)
   end function predict
 
   function log_lik(this)
     class(DenseGP), intent(in) :: this
     real(dp) log_lik
+    ! First line of eq. (8) in ref. [1]
     log_lik = -0.5_dp * (logdet(this%C) + dot_product(this%t, this%invCt))
   end function log_lik
 

@@ -1,3 +1,5 @@
+! Base class for Gaussian process types
+
 module m_gp
   use m_util
   use m_cov
@@ -31,6 +33,7 @@ module m_gp
   end type BaseGP
 
   abstract interface
+     ! The log likelihood of the hyperparameters
      function log_lik(this)
        use m_util, only: dp
        import BaseGP
@@ -38,11 +41,16 @@ module m_gp
        real(dp) log_lik
      end function log_lik
 
+     ! Helper routine to update the internal state.  Called when an
+     ! observation or hyperparameter changes and the covariance matrix
+     ! must be recomputed.
      subroutine update_matrices(this)
        import BaseGP
        class(BaseGP), intent(inout) :: this
      end subroutine update_matrices
 
+     ! Make a prediction of the underlying function value at
+     ! coordinate `xnew'.
      function predict(this, xnew, obs_type_new)
        use m_util, only: dp
        import BaseGP
@@ -52,6 +60,7 @@ module m_gp
        integer, optional, intent(in) :: obs_type_new
      end function predict
 
+     ! Serialize to a file
      subroutine write_out(this, filename)
        import BaseGP
        class(BaseGP), intent(in) :: this
@@ -61,6 +70,10 @@ module m_gp
 
 contains
 
+  ! Set the hyperparameters of `gp' to `hypers', assuming they are
+  ! ordered [nu(1:nnu), theta(1:ntheta)], where nu are the noise
+  ! hyperparameters and theta are the covariance hyperparameters.
+  ! Calls `update_matrices'.
   subroutine set_hyperparams(gp, hypers)
     class(BaseGP), intent(inout) :: gp
     real(dp), dimension(:) :: hypers
@@ -77,6 +90,8 @@ contains
     end if
   end subroutine set_hyperparams
 
+  ! A routine with the required interface for the NLopt library, for
+  ! maximizing the log-likelihood.
   subroutine nlog_lik(val, n, hypers, grad, need_gradient, gp)
     class(BaseGP) :: gp
     integer :: n, need_gradient
@@ -89,6 +104,9 @@ contains
     call output_params(gp,val)
   end subroutine nlog_lik
 
+  ! Helper routine for nlog_lik: print out the current hyperparameters
+  ! (associated with `gp') and their corresponding log-likelihood
+  ! (`val').
   subroutine output_params(gp,val)
     class(BaseGP) :: gp
     real(dp) :: val
