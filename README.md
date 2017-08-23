@@ -131,8 +131,8 @@ others can be defined similarly.
 
 Noise models extend the abstract type `noise_model`.
 
-### C bindings
-
+A noise model contains a function `noise`, taking the type of observation, the noise hyperparameters,
+and returning the variance of the noise.
 
 ## References
 
