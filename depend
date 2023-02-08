@@ -1,0 +1,22 @@
+obj/c_interface.o obj/c_interface.modstamp : src/c_interface.f90 obj/m_gp_sparse.modstamp obj/m_gp.modstamp 
+obj/cov.o obj/m_cov.modstamp : src/cov.f90 obj/m_util.modstamp 
+obj/cov_all.o obj/m_cov_all.modstamp : src/cov_all.f90 obj/m_util.modstamp obj/m_cov_sqexp_param4.modstamp obj/m_cov_sqexp.modstamp obj/m_cov.modstamp 
+obj/cov_sqexp.o obj/m_cov_sqexp.modstamp : src/cov_sqexp.f90 obj/m_cov.modstamp obj/m_util.modstamp 
+obj/cov_sqexp_param4.o obj/m_cov_sqexp_param4.modstamp : src/cov_sqexp_param4.f90 obj/m_cov.modstamp obj/m_util.modstamp 
+obj/gp.o obj/m_gp.modstamp : src/gp.f90 obj/m_noise.modstamp obj/m_cov.modstamp obj/m_util.modstamp 
+obj/gp_dense.o obj/m_gp_dense.modstamp : src/gp_dense.f90 obj/m_noise_all.modstamp obj/m_cov_all.modstamp obj/m_util.modstamp obj/m_gp.modstamp 
+obj/gp_example.o obj/m_gp_example.modstamp : src/gp_example.f90 obj/m_noise_value_only.modstamp obj/m_cov_sqexp.modstamp obj/m_util.modstamp obj/m_gp_dense.modstamp obj/m_gp_sparse.modstamp obj/m_gp.modstamp 
+obj/gp_sparse.o obj/m_gp_sparse.modstamp : src/gp_sparse.f90 obj/m_noise_all.modstamp obj/m_cov_all.modstamp obj/m_util.modstamp obj/m_gp.modstamp 
+obj/noise.o obj/m_noise.modstamp : src/noise.f90 obj/m_util.modstamp 
+obj/noise_all.o obj/m_noise_all.modstamp : src/noise_all.f90 obj/m_util.modstamp obj/m_noise_param2.modstamp obj/m_noise_value_only.modstamp obj/m_noise.modstamp 
+obj/noise_param2.o obj/m_noise_param2.modstamp : src/noise_param2.f90 obj/m_util.modstamp obj/m_noise.modstamp 
+obj/noise_value_only.o obj/m_noise_value_only.modstamp : src/noise_value_only.f90 obj/m_util.modstamp obj/m_noise.modstamp 
+obj/optim.o obj/m_gp_optim.modstamp : src/optim.f90 nlopt.f obj/m_util.modstamp obj/m_gp.modstamp 
+obj/util.o obj/m_util.modstamp : src/util.f90 
+obj/cov_test.o : test/cov_test.f90 obj/m_cov_sqexp.modstamp obj/m_util.modstamp 
+obj/gp_io_test.o : test/gp_io_test.f90 obj/m_gp_example.modstamp obj/m_gp.modstamp 
+obj/gp_test.o : test/gp_test.f90 obj/m_gp_example.modstamp obj/m_gp.modstamp 
+obj/inv_test.o : test/inv_test.f90 obj/m_util.modstamp 
+obj/logdet_test.o : test/logdet_test.f90 obj/m_util.modstamp 
+obj/optim_test.o : test/optim_test.f90 obj/m_gp_example.modstamp obj/m_gp_optim.modstamp 
+obj/solve_test.o : test/solve_test.f90 obj/m_util.modstamp 
